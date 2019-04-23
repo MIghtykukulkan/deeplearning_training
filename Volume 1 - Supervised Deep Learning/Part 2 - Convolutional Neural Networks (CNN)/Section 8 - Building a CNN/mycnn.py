@@ -51,11 +51,28 @@ test_set = test_datagen.flow_from_directory(
         class_mode='binary')
 
 classifier.fit_generator(training_set,
-                        steps_per_epoch=1,
+                        steps_per_epoch=8000,
                         epochs=25,
                         validation_data=test_set,
                         validation_steps=2000)
 
 classifier.save('my_model.h5')
+
+
+import numpy as np
+from keras.preprocessing import image
+testimage = image.load_img('mydog.jpg', target_size = (64,64))
+testimage = image.img_to_array(testimage)
+testimage = np.expand_dims(testimage, axis=0)
+
+result = classifier.predict(testimage)
+training_set.class_indices
+
+from keras.models import load_model
+model = load_model('my_model.h5')
+
+from keras.utils import plot_model
+plot_model(model, to_file='model.png')
+
            
 

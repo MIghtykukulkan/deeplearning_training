@@ -43,24 +43,21 @@ x_test = x_test.reshape(-1 , 28 , 28 , 1)
 classifier = Sequential()
 
 #convolution layer
-classifier.add(Convolution2D(64, (3, 3), input_shape=(28,28, 1), activation = 'relu'))
+classifier.add(Convolution2D(24, (5, 5), input_shape=(28,28, 1), activation = 'relu'))
 #max pooling
 classifier.add(MaxPooling2D(pool_size=(2, 2)))
-classifier.add(Dropout(0.25))
+
 #convolution layer - 2 note that the input shape is not requied to add second conv layer
-classifier.add(Convolution2D(32, (3, 3), activation = 'relu'))
+classifier.add(Convolution2D(48, (5, 5), activation = 'relu'))
 #max pooling
 classifier.add(MaxPooling2D(pool_size=(2, 2)))
-classifier.add(Dropout(0.25))
+
 
 #flattern
 classifier.add(Flatten())
 
 # Adding the second hidden layer
-classifier.add(Dense(units = 64, kernel_initializer = 'uniform', activation = 'relu'))
-
-# Adding the second hidden layer
-classifier.add(Dense(units = 32, kernel_initializer = 'uniform', activation = 'relu'))
+classifier.add(Dense(units = 256, kernel_initializer = 'uniform', activation = 'relu'))
 
 # Adding the output layer
 classifier.add(Dense(units = 10, kernel_initializer = 'uniform', activation = 'softmax'))

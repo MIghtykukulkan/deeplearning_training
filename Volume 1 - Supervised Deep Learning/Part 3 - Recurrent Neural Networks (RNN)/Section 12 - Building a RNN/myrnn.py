@@ -7,12 +7,13 @@ import pandas as pd
 from nsepy import get_history
 from datetime import date
 
-data = get_history(symbol="RPOWER", start=date(2016,1,1), end=date.today())
+stockcode = "TNPETRO"
+data = get_history(symbol=stockcode, start=date(2016,1,1), end=date.today())
 
 # Importing the training set
 #dataset_train = pd.read_csv('hexaware_train.csv')
 dataset_train = data
-training_set = dataset_train.iloc[:, 4:5,].values
+training_set = dataset_train.iloc[:, 2:3,].values
 
 
 
@@ -70,28 +71,29 @@ regressor.compile(optimizer = 'adam', loss = 'mean_squared_error')
 # Fitting the RNN to the Training set
 regressor.fit(X_train, y_train, epochs = 100, batch_size = 32)
 
-regressor.save('rpower.h5')
+#regressor.save('tatamotors.h5')
 
 
 
 # Part 3 - Making the predictions and visualising the results
 
+#doenload -link - 
 # Getting the real stock price of 2017
-dataset_test = pd.read_csv('hexaware_test.csv')
-real_stock_price = dataset_test.iloc[:, 4:5].values
+#dataset_test = pd.read_csv('tatamotors.csv')
+dataset_test = data
+real_stock_price = dataset_test.iloc[:, 2:3].values
 
 # Getting the predicted stock price of 2017
 
 #dataset_total = pd.concat((dataset_train['Open Price'], dataset_test['Open Price']), axis = 0)
-inputs = training_set[ -60:]
-inputs = sc.transform(inputs)
-X_test = []
-for i in range(60, 80):
-    X_test.append(inputs[i-60:i, 0])
-X_test = np.array(X_test)
-X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
-predicted_stock_price = regressor.predict(X_test)
+inputOriginal = real_stock_price[ -60:]
+inputs = sc.transform(inputOriginal)
+
+inputs = np.reshape(inputs, (1, 60, 1))
+predicted_stock_price = regressor.predict(inputs)
+
 predicted_stock_price = sc.inverse_transform(predicted_stock_price)
+print(inputOriginal[59], predicted_stock_price[0])
 
 # Visualising the results
 plt.plot(real_stock_price, color = 'red', label = 'Real Hexaware Stock Price')
